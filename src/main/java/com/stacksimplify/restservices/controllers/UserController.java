@@ -69,7 +69,7 @@ public class UserController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
 		}
 	}
-	@DeleteMapping("/users/{id}")
+	@DeleteMapping("/users/{id}") 
 	public void deleteUserById(@PathVariable Long id) {
 		userSvc.deleteByUserId(id);
 	}
