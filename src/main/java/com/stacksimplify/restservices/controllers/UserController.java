@@ -1,53 +1,47 @@
 package com.stacksimplify.restservices.controllers;
 
-import java.util.List;
-import java.util.Optional;
-
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
-
+import com.stacksimplify.restservices.entities.User;
+import com.stacksimplify.restservices.exceptions.UserAlreadyExistsException;
 import com.stacksimplify.restservices.exceptions.UserNameNotFoundException;
+import com.stacksimplify.restservices.exceptions.UserNotFoundException;
+import com.stacksimplify.restservices.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.stacksimplify.restservices.entities.User;
-import com.stacksimplify.restservices.exceptions.UserAlreadyExistsException;
-import com.stacksimplify.restservices.exceptions.UserNotFoundException;
-import com.stacksimplify.restservices.services.UserService;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import java.util.List;
+import java.util.Optional;
 
+//Controller -
 @RestController
 @Validated
+@RequestMapping(value = "/users")
 public class UserController {
-	
-	// autowire user service
-	@Autowired	
-	private UserService userSvc;
-	
-	@GetMapping("/users")
-	private List<User> getAllUsers() {
-		return userSvc.getAllUsers();
+
+	// Autowire the UserService
+	@Autowired
+	private UserService userService;
+
+	// getAllUsers Method
+	@GetMapping
+	public List<User> getAllUsers() {
+		return userService.getAllUsers();
 	}
-	
+
 	// Create User Method
 	// @RequestBody Annotation
 	// @PostMapping Annotation
-	@PostMapping("/users")
+	@PostMapping
 	public ResponseEntity<Void> createUser(@Valid @RequestBody User user, UriComponentsBuilder builder) {
 		try {
-			System.out.println("Inside the createUser method.");
-			userSvc.createUser(user);
+			userService.createUser(user);
 			HttpHeaders headers = new HttpHeaders();
 			headers.setLocation(builder.path("/users/{id}").buildAndExpand(user.getId()).toUri());
 			return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
@@ -56,35 +50,43 @@ public class UserController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
 		}
 	}
-	
-	@GetMapping("/users/{id}")
-	public Optional<User> getUserById(@PathVariable("id") @Min(1) Long id){
+
+	// getUserById
+	@GetMapping("/{id}")
+	public Optional<User> getUserById(@PathVariable("id") @Min(1) Long id) {
+
 		try {
-			return userSvc.getUserById(id);
-		} catch (UserNotFoundException e) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+			return userService.getUserById(id);
+		} catch (UserNotFoundException ex) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
 		}
 	}
-	
-	@PutMapping("/users/{id}")
-	public User updateUserById(@RequestBody User user, @PathVariable("id") Long id) {
+
+	// updateUserById
+	@PutMapping("/{id}")
+	public User updateUserById(@PathVariable("id") Long id, @RequestBody User user) {
+
 		try {
-			return userSvc.updateUserById(id, user);
-		} catch(UserNotFoundException ex) {
+			return userService.updateUserById(id, user);
+		} catch (UserNotFoundException ex) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
 		}
-	}
-	
-	@DeleteMapping("/users/{id}") 
-	public void deleteUserById(@PathVariable Long id) {
-		userSvc.deleteByUserId(id);
+
 	}
 
-	@GetMapping("/users/byusername/{username}")
+	// deleteUserById
+	@DeleteMapping("/{id}")
+	public void deleteUserById(@PathVariable("id") Long id) {
+		userService.deleteByUserId(id); 
+	}
+
+	// getUserByUsername
+	@GetMapping("/byusername/{username}")
 	public User getUserByUsername(@PathVariable("username") String username) throws UserNameNotFoundException {
-		User user = userSvc.getUserByUsername(username);
-		if(user == null) throw new UserNameNotFoundException("User by Name " + username + " not found");
+		User user =  userService.getUserByUsername(username);
+		if(user == null)
+			throw new UserNameNotFoundException("Username: '" + username + "' not found in User repository");
 		return user;
-
-	}
+	
+	} 
 }

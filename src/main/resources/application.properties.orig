@@ -1,0 +1,8 @@
+<<<<<<< HEAD
+spring.jpa.show-sql=true
+spring.h2.console.enabled=true
+server.port=8080
+server.error.include-stacktrace=NEVER
+=======
+server.port=8081
+>>>>>>> 8e08bf0a8dd8daa32ea7e9346b525457b59e463d
