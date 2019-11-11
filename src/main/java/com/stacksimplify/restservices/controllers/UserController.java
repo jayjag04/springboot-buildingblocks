@@ -6,6 +6,7 @@ import com.stacksimplify.restservices.exceptions.UserNameNotFoundException;
 import com.stacksimplify.restservices.exceptions.UserNotFoundException;
 import com.stacksimplify.restservices.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.ResourceSupport;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +24,8 @@ import java.util.Optional;
 @RestController
 @Validated
 @RequestMapping(value = "/users")
-public class UserController {
-
-	// Autowire the UserService
+public class UserController extends ResourceSupport {
+	// Auto-wire the UserService
 	@Autowired
 	private UserService userService;
 

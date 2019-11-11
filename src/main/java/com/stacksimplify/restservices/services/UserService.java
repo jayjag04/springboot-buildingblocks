@@ -42,7 +42,7 @@ public class UserService {
 		Optional<User> user1 = userRepo.findById(id);
 		if (!user1.isPresent())
 			throw new UserNotFoundException("User not found in in the repo, please provide the corect user id");
-		user.setId(id);
+		user.setUserid(id);
 		return userRepo.save(user);
 	}
 

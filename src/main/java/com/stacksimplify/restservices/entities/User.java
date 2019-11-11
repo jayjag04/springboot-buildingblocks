@@ -11,18 +11,15 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import org.springframework.hateoas.ResourceSupport;
+
 
 // entity
 @Entity
 @Table(name="user")
-public class User {
+public class User extends ResourceSupport {
 	
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
+	
 	public String getUsername() {
 		return username;
 	}
@@ -62,8 +59,15 @@ public class User {
 	
 	@Id
 	@GeneratedValue()
-	private Long id;
+	private Long userid;
 	
+	public Long getUserid() {
+		return userid;
+	}
+	public void setUserid(Long userid) {
+		this.userid = userid;
+	}
+
 	@Column(name="USER_NAME", length=50, nullable=false, unique=true)
 	@NotEmpty(message="User name is mandatory. Please provide a value")
 	private String username;
@@ -97,24 +101,22 @@ public class User {
 	public User() {
 		super();		
 	}
-	
-	// fields constructor
-	public User(Long id, String username, String firstname, String lastname, String email, String role, String ssn) {
+	@Override
+	public String toString() {
+		return "User [userid=" + userid + ", username=" + username + ", firstname=" + firstname + ", lastname="
+				+ lastname + ", email=" + email + ", role=" + role + ", ssn=" + ssn + ", orders=" + orders + "]";
+	}
+	public User(Long userid, @NotEmpty(message = "User name is mandatory. Please provide a value") String username,
+			@Size(min = 2, message = "FistName should have atleast 2 characters") String firstname, String lastname,
+			String email, String role, String ssn, List<Order> orders) {
 		super();
-		this.id = id;
+		this.userid = userid;
 		this.username = username;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.email = email;
 		this.role = role;
 		this.ssn = ssn;
-	}
-	
-	// toString - optional for debugging
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname
-				+ ", email=" + email + ", role=" + role + ", ssn=" + ssn + "]";
-	}
-
+		this.orders = orders;
+	} 
 }
