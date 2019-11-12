@@ -1,15 +1,9 @@
 package com.stacksimplify.restservices.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.hateoas.ResourceSupport;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "orders")
@@ -52,7 +46,4 @@ public class Order extends ResourceSupport {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
-	
-
 }
