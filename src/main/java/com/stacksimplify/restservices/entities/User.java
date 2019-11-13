@@ -1,7 +1,6 @@
 package com.stacksimplify.restservices.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import org.springframework.hateoas.ResourceSupport;
 
 import javax.persistence.*;
@@ -13,7 +12,8 @@ import java.util.List;
 // entity
 @Entity
 @Table(name="user")
-@JsonIgnoreProperties({"firstname", "lastname"})
+@JsonFilter(value="userFilter")
+// @JsonIgnoreProperties({"firstname", "lastname"})
 public class User extends ResourceSupport {
 	
 	
@@ -83,7 +83,7 @@ public class User extends ResourceSupport {
 	private String role;
 	
 	@Column(name="SSN", length=50, nullable=false, unique=true)
-    @JsonIgnore
+    // @JsonIgnore
 	private String ssn;
 	
 	@OneToMany(mappedBy="user")
