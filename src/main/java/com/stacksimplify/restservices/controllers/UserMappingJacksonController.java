@@ -49,11 +49,11 @@ public class UserMappingJacksonController {
 
     @GetMapping("/params/{id}")
     public MappingJacksonValue getUserById2(@PathVariable("id") @Min(1) Long id,
-                                            @RequestParam Set<String> fields) {
+                                            @RequestParam Set<String> fields) { 
 
         try {
             Optional<User> userOptional = userService.getUserById(id);
-            User user = userOptional.get(); 
+            User user = userOptional.get();
             MappingJacksonValue mapper   = new MappingJacksonValue(user);
             FilterProvider filters = new SimpleFilterProvider().addFilter("userFilter",
                     SimpleBeanPropertyFilter.filterOutAllExcept( fields ));

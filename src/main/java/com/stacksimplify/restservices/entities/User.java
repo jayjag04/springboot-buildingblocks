@@ -1,6 +1,6 @@
 package com.stacksimplify.restservices.entities;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.hateoas.ResourceSupport;
 
 import javax.persistence.*;
@@ -12,11 +12,9 @@ import java.util.List;
 // entity
 @Entity
 @Table(name="user")
-@JsonFilter(value="userFilter")
 // @JsonIgnoreProperties({"firstname", "lastname"})
+//@JsonFilter(value="userFilter")
 public class User extends ResourceSupport {
-	
-	
 	public String getUsername() {
 		return username;
 	}
@@ -56,6 +54,7 @@ public class User extends ResourceSupport {
 	
 	@Id
 	@GeneratedValue()
+    @JsonView(Views.External.class)
 	private Long userid;
 	
 	public Long getUserid() {
@@ -67,26 +66,33 @@ public class User extends ResourceSupport {
 
 	@Column(name="USER_NAME", length=50, nullable=false, unique=true)
 	@NotEmpty(message="User name is mandatory. Please provide a value")
+    @JsonView(Views.External.class)
 	private String username;
 	
 	@Column(name="first_name", length=50, nullable=false)
 	@Size(min=2, message="FistName should have atleast 2 characters")
+    @JsonView(Views.External.class)
 	private String firstname;
 	
 	@Column(name="last_name", length=50, nullable=false)
+    @JsonView(Views.External.class)
 	private String lastname;
 	
 	@Column(name="email_address", length=50, nullable=false)
+    @JsonView(Views.External.class)
 	private String email;
 	
 	@Column(name="Role", length=50, nullable=false)
+    @JsonView(Views.Internal.class)
 	private String role;
 	
 	@Column(name="SSN", length=50, nullable=false, unique=true)
+    @JsonView(Views.Internal.class)
     // @JsonIgnore
 	private String ssn;
 	
 	@OneToMany(mappedBy="user")
+    @JsonView(Views.Internal.class)
 	private List<Order> orders;
 	
 	public List<Order> getOrders() {
